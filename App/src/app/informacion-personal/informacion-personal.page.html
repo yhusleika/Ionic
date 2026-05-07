@@ -1,0 +1,127 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="theme.toggle()">
+        <ion-icon [name]="theme.isDarkMode() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="profile-header">
+    <div class="avatar-container" (click)="changeProfilePicture()">
+      <ion-avatar>
+        <img [src]="profileImage" />
+      </ion-avatar>
+      <div class="edit-icon">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+    </div>
+    <h2>Usuario Demo</h2>
+    <p>usuario@comuniapp.com</p>
+  </div>
+  
+  <div class="segment-container">
+    <ion-segment [(ngModel)]="currentTab" mode="md">
+      <ion-segment-button value="personal">
+        <ion-label>Personal</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="hogar">
+        <ion-label>Hogar</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="preferencias">
+        <ion-label>Preferencias</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  
+  <div [ngSwitch]="currentTab">
+    <!-- Pestaña Personal -->
+    <ion-card class="premium-card" *ngSwitchCase="'personal'">
+      <ion-card-header>
+        <ion-card-subtitle>Datos del Adoptante</ion-card-subtitle>
+        <ion-card-title>Información Personal</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+          <ion-input label="Nombre completo" labelPlacement="stacked" value="Amante de los animales"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-icon name="call-outline" slot="start" color="medium"></ion-icon>
+          <ion-input label="Teléfono" labelPlacement="stacked" type="tel" value="+1 234 567 8900"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-icon name="location-outline" slot="start" color="medium"></ion-icon>
+          <ion-input label="Dirección" labelPlacement="stacked" value="Calle Principal 123, Ciudad"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon name="calendar-outline" slot="start" color="medium"></ion-icon>
+          <ion-input label="Fecha de Nacimiento" labelPlacement="stacked" type="date" value="1990-01-01"></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Pestaña Hogar -->
+    <ion-card class="premium-card" *ngSwitchCase="'hogar'">
+      <ion-card-header>
+        <ion-card-subtitle>Condiciones</ion-card-subtitle>
+        <ion-card-title>Sobre tu Hogar</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-icon name="home-outline" slot="start" color="medium"></ion-icon>
+          <ion-select label="Tipo de Vivienda" labelPlacement="stacked" value="casa">
+            <ion-select-option value="casa">Casa con patio</ion-select-option>
+            <ion-select-option value="apartamento">Apartamento</ion-select-option>
+            <ion-select-option value="finca">Finca/Zona rural</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon name="paw-outline" slot="start" color="medium"></ion-icon>
+          <ion-select label="¿Tienes otras mascotas?" labelPlacement="stacked" value="si_perro">
+            <ion-select-option value="no">No, será la primera</ion-select-option>
+            <ion-select-option value="si_perro">Sí, perros</ion-select-option>
+            <ion-select-option value="si_gato">Sí, gatos</ion-select-option>
+            <ion-select-option value="ambos">Sí, perros y gatos</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Pestaña Preferencias -->
+    <ion-card class="premium-card" *ngSwitchCase="'preferencias'">
+      <ion-card-header>
+        <ion-card-subtitle>El compañero ideal</ion-card-subtitle>
+        <ion-card-title>Tus Preferencias</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-icon name="heart-outline" slot="start" color="tertiary"></ion-icon>
+          <ion-select label="Especie de interés" labelPlacement="stacked" value="perro">
+            <ion-select-option value="perro">Perro</ion-select-option>
+            <ion-select-option value="gato">Gato</ion-select-option>
+            <ion-select-option value="cualquiera">Me es indiferente</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon name="resize-outline" slot="start" color="secondary"></ion-icon>
+          <ion-select label="Tamaño preferido" labelPlacement="stacked" value="mediano">
+            <ion-select-option value="pequeno">Pequeño</ion-select-option>
+            <ion-select-option value="mediano">Mediano</ion-select-option>
+            <ion-select-option value="grande">Grande</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  
+  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top action-btn">
+    Guardar Todos los Cambios
+  </ion-button>
+</ion-content>
