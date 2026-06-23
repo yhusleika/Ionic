@@ -18,10 +18,85 @@
     <ion-icon name="paw-outline" class="main-icon"></ion-icon>
     <h1>Bienvenido a AdoptaPet</h1>
     <p>Dale un hogar a quien más lo necesita y encuentra a tu compañero ideal.</p>
-    <ion-button shape="round" color="light" routerLink="/informacion-personal" class="cta-btn">
-      Completar Solicitud
+    <ion-button shape="round" color="light" routerLink="/adoptar" class="cta-btn">
+      ¡Adoptar Ahora!
       <ion-icon slot="end" name="heart-outline"></ion-icon>
     </ion-button>
+  </div>
+
+  <!-- Sección del Rastreador de Adopciones Activas -->
+  <div class="ion-padding" *ngIf="activeApplications.length > 0">
+    <h2 class="section-title">Seguimiento de Adopción</h2>
+    <ion-card class="tracker-card" *ngFor="let app of activeApplications">
+      <ion-card-header class="tracker-header">
+        <ion-avatar slot="start" class="tracker-avatar">
+          <img [src]="app.petImage" [alt]="app.petName" />
+        </ion-avatar>
+        <div class="tracker-title-container">
+          <ion-card-title>Solicitud para: {{ app.petName }}</ion-card-title>
+          <ion-card-subtitle>Iniciada el: {{ app.date }}</ion-card-subtitle>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <!-- Stepper Visual -->
+        <div class="stepper">
+          <!-- Paso 1: Recibida -->
+          <div class="step active">
+            <div class="step-circle"><ion-icon name="checkmark"></ion-icon></div>
+            <div class="step-label">Recibida</div>
+          </div>
+          <div class="step-connector" [ngClass]="{'active': app.status !== 'recibida'}"></div>
+
+          <!-- Paso 2: Evaluación -->
+          <div class="step" [ngClass]="{'active': app.status !== 'recibida', 'warning': !isProfileComplete && app.status === 'evaluacion'}">
+            <div class="step-circle">
+              <ion-icon [name]="!isProfileComplete && app.status === 'evaluacion' ? 'alert' : (app.status !== 'recibida' ? 'checkmark' : 'document-text-outline')"></ion-icon>
+            </div>
+            <div class="step-label">Evaluación</div>
+          </div>
+          <div class="step-connector" [ngClass]="{'active': app.status === 'entrevista' || app.status === 'aprobada'}"></div>
+
+          <!-- Paso 3: Entrevista -->
+          <div class="step" [ngClass]="{'active': app.status === 'entrevista' || app.status === 'aprobada'}">
+            <div class="step-circle">
+              <ion-icon [name]="app.status === 'entrevista' || app.status === 'aprobada' ? 'checkmark' : 'calendar-outline'"></ion-icon>
+            </div>
+            <div class="step-label">Entrevista</div>
+          </div>
+          <div class="step-connector" [ngClass]="{'active': app.status === 'aprobada'}"></div>
+
+          <!-- Paso 4: Aprobado -->
+          <div class="step" [ngClass]="{'active': app.status === 'aprobada'}">
+            <div class="step-circle">
+              <ion-icon name="ribbon-outline"></ion-icon>
+            </div>
+            <div class="step-label">Listo</div>
+          </div>
+        </div>
+
+        <!-- Banner de Perfil Incompleto -->
+        <div class="warning-banner" *ngIf="!isProfileComplete && app.status === 'evaluacion'">
+          <ion-icon name="warning" color="warning" class="warning-icon"></ion-icon>
+          <div class="warning-text">
+            <h4>Perfil Incompleto</h4>
+            <p>Por favor, completa tus datos personales en el perfil para poder evaluar tu solicitud.</p>
+            <ion-button size="small" shape="round" color="warning" routerLink="/informacion-personal">Ir al Perfil</ion-button>
+          </div>
+        </div>
+
+        <!-- Información adicional según el estado -->
+        <div class="status-info ion-margin-top" [ngSwitch]="app.status">
+          <p *ngSwitchCase="'recibida'">Estamos registrando tu solicitud en nuestro sistema. ¡Pronto iniciaremos la evaluación!</p>
+          <p *ngSwitchCase="'evaluacion'">
+            <span *ngIf="isProfileComplete">Tu perfil de adoptante está siendo revisado por el refugio. Te avisaremos pronto.</span>
+            <span *ngIf="!isProfileComplete">Tu solicitud está pausada. Completa tu dirección y teléfono para que podamos contactarte.</span>
+          </p>
+          <p *ngSwitchCase="'entrevista'"><strong>📋 Próximo Paso:</strong> Hemos coordinado tu entrevista de idoneidad. Revisa tu correo para el enlace de videollamada.</p>
+          <p *ngSwitchCase="'aprobada'">🎉 <strong>¡Felicidades!</strong> Tu solicitud ha sido aprobada. El refugio se comunicará contigo para acordar la entrega.</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 
   <!-- Sección de Accesos Rápidos -->
@@ -30,25 +105,25 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-card class="action-card" routerLink="/informacion-personal">
+          <ion-card class="action-card" routerLink="/adoptar" button>
             <ion-icon name="search-outline" color="primary"></ion-icon>
             <p>Adoptar</p>
           </ion-card>
         </ion-col>
         <ion-col size="6">
-          <ion-card class="action-card" routerLink="/contacto">
+          <ion-card class="action-card" routerLink="/contacto" button>
             <ion-icon name="medkit-outline" color="secondary"></ion-icon>
             <p>Refugios</p>
           </ion-card>
         </ion-col>
         <ion-col size="6">
-          <ion-card class="action-card">
+          <ion-card class="action-card" (click)="openDonationModal()" button>
             <ion-icon name="heart-circle-outline" color="tertiary"></ion-icon>
             <p>Donar</p>
           </ion-card>
         </ion-col>
         <ion-col size="6">
-          <ion-card class="action-card">
+          <ion-card class="action-card" (click)="openVolunteerModal()" button>
             <ion-icon name="people-outline" color="medium"></ion-icon>
             <p>Voluntariado</p>
           </ion-card>
@@ -111,4 +186,136 @@
       </ion-item>
     </ion-list>
   </div>
+
+  <!-- MODAL DE DONACIÓN INTERACTIVA -->
+  <ion-modal [isOpen]="isDonationModalOpen" (didDismiss)="closeDonationModal()" class="donation-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Simulador de Donación</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeDonationModal()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <div class="donation-header ion-text-center">
+          <ion-icon name="heart-circle-outline" color="tertiary" class="modal-header-icon"></ion-icon>
+          <h2>Elige el Monto a Donar</h2>
+          <p>Mira en tiempo real cómo tu ayuda económica impacta positivamente a nuestras mascotas rescatadas.</p>
+        </div>
+
+        <!-- Visualizador de Monto -->
+        <div class="amount-display ion-text-center">
+          <h1>${{ donationAmount }}</h1>
+          <p>Dólares (simulado)</p>
+        </div>
+
+        <!-- Slider de Rango -->
+        <ion-range
+          min="10"
+          max="250"
+          step="5"
+          [value]="donationAmount"
+          (ionInput)="onDonationChange($event)"
+          color="tertiary"
+          class="donation-slider">
+          <ion-icon name="cash-outline" slot="start" size="small" color="medium"></ion-icon>
+          <ion-icon name="cash" slot="end" color="tertiary"></ion-icon>
+        </ion-range>
+
+        <!-- Botones Preset -->
+        <div class="preset-buttons ion-margin-bottom">
+          <ion-button size="small" shape="round" fill="outline" color="tertiary" (click)="setDonationPreset(15)">$15</ion-button>
+          <ion-button size="small" shape="round" fill="outline" color="tertiary" (click)="setDonationPreset(50)">$50</ion-button>
+          <ion-button size="small" shape="round" fill="outline" color="tertiary" (click)="setDonationPreset(100)">$100</ion-button>
+          <ion-button size="small" shape="round" fill="outline" color="tertiary" (click)="setDonationPreset(200)">$200</ion-button>
+        </div>
+
+        <!-- Tarjeta de impacto dinámico -->
+        <ion-card class="impact-card" [ngClass]="donationImpact.color">
+          <ion-card-content class="impact-content">
+            <div class="impact-icon-bg">
+              <ion-icon [name]="donationImpact.icon"></ion-icon>
+            </div>
+            <div class="impact-text">
+              <h3>{{ donationImpact.title }}</h3>
+              <p>{{ donationImpact.description }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-button expand="block" shape="round" color="tertiary" class="confirm-btn ion-margin-top" (click)="confirmDonation()">
+          <ion-icon name="heart" slot="start"></ion-icon>
+          Confirmar Donación
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- MODAL DE VOLUNTARIADO INTERACTIVO -->
+  <ion-modal [isOpen]="isVolunteerModalOpen" (didDismiss)="closeVolunteerModal()" class="volunteer-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Planificar Voluntariado</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeVolunteerModal()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <div class="volunteer-header ion-text-center">
+          <ion-icon name="people-outline" color="primary" class="modal-header-icon"></ion-icon>
+          <h2>Únete al Equipo</h2>
+          <p>Selecciona tus áreas de interés y los días en que deseas apoyarnos para asignarte un turno.</p>
+        </div>
+
+        <h3 class="subsection-title">1. ¿Qué te gustaría hacer?</h3>
+        <ion-list lines="none" class="interests-list">
+          <ion-item class="checkbox-item">
+            <ion-checkbox slot="start" [(ngModel)]="volunteerInterests.walk">Pasear perros y socialización</ion-checkbox>
+          </ion-item>
+          <ion-item class="checkbox-item">
+            <ion-checkbox slot="start" [(ngModel)]="volunteerInterests.clean">Limpieza del refugio y alimentación</ion-checkbox>
+          </ion-item>
+          <ion-item class="checkbox-item">
+            <ion-checkbox slot="start" [(ngModel)]="volunteerInterests.events">Organización de eventos de adopción</ion-checkbox>
+          </ion-item>
+          <ion-item class="checkbox-item">
+            <ion-checkbox slot="start" [(ngModel)]="volunteerInterests.media">Fotografía y difusión en redes</ion-checkbox>
+          </ion-item>
+        </ion-list>
+
+        <h3 class="subsection-title ion-margin-top">2. Selecciona tu día disponible</h3>
+        <ion-item lines="none" class="select-item ion-margin-bottom">
+          <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+          <ion-select label="Día de la semana" labelPlacement="stacked" [(ngModel)]="volunteerDay">
+            <ion-select-option value="lunes">Lunes</ion-select-option>
+            <ion-select-option value="miercoles">Miércoles</ion-select-option>
+            <ion-select-option value="sabado">Sábado</ion-select-option>
+            <ion-select-option value="domingo">Domingo</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Tarjeta dinámica de información del turno -->
+        <ion-card class="shift-card">
+          <ion-card-content>
+            <ion-icon name="time-outline" color="primary"></ion-icon>
+            <div class="shift-details">
+              <h4>Actividad sugerida para el {{ volunteerDay | titlecase }}</h4>
+              <p>{{ getVolunteerInfo() }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-button expand="block" shape="round" color="primary" class="confirm-btn ion-margin-top" (click)="confirmVolunteer()">
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          Registrar Turno
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

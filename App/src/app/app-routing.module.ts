@@ -12,6 +12,10 @@ const routes: Routes = [
     loadChildren: () => import('./inicio/inicio.module').then( m => m.InicioPageModule)
   },
   {
+    path: 'adoptar',
+    loadChildren: () => import('./adoptar/adoptar.module').then( m => m.AdoptarPageModule)
+  },
+  {
     path: 'informacion-personal',
     loadChildren: () => import('./informacion-personal/informacion-personal.module').then( m => m.InformacionPersonalPageModule)
   },

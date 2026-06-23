@@ -22,8 +22,8 @@
         <ion-icon name="camera-outline"></ion-icon>
       </div>
     </div>
-    <h2>Usuario Demo</h2>
-    <p>usuario@comuniapp.com</p>
+    <h2>{{ profile.name || 'Usuario Demo' }}</h2>
+    <p>{{ profile.phone || 'Sin número registrado' }}</p>
   </div>
   
   <div class="segment-container">
@@ -50,19 +50,19 @@
       <ion-card-content>
         <ion-item lines="full">
           <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
-          <ion-input label="Nombre completo" labelPlacement="stacked" value="Amante de los animales"></ion-input>
+          <ion-input label="Nombre completo" labelPlacement="stacked" [(ngModel)]="profile.name" placeholder="Tu nombre"></ion-input>
         </ion-item>
         <ion-item lines="full">
           <ion-icon name="call-outline" slot="start" color="medium"></ion-icon>
-          <ion-input label="Teléfono" labelPlacement="stacked" type="tel" value="+1 234 567 8900"></ion-input>
+          <ion-input label="Teléfono" labelPlacement="stacked" type="tel" [(ngModel)]="profile.phone" placeholder="Tu teléfono"></ion-input>
         </ion-item>
         <ion-item lines="full">
           <ion-icon name="location-outline" slot="start" color="medium"></ion-icon>
-          <ion-input label="Dirección" labelPlacement="stacked" value="Calle Principal 123, Ciudad"></ion-input>
+          <ion-input label="Dirección" labelPlacement="stacked" [(ngModel)]="profile.address" placeholder="Tu dirección"></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-icon name="calendar-outline" slot="start" color="medium"></ion-icon>
-          <ion-input label="Fecha de Nacimiento" labelPlacement="stacked" type="date" value="1990-01-01"></ion-input>
+          <ion-input label="Fecha de Nacimiento" labelPlacement="stacked" type="date" [(ngModel)]="profile.birthdate"></ion-input>
         </ion-item>
       </ion-card-content>
     </ion-card>
@@ -76,7 +76,7 @@
       <ion-card-content>
         <ion-item lines="full">
           <ion-icon name="home-outline" slot="start" color="medium"></ion-icon>
-          <ion-select label="Tipo de Vivienda" labelPlacement="stacked" value="casa">
+          <ion-select label="Tipo de Vivienda" labelPlacement="stacked" [(ngModel)]="profile.housing">
             <ion-select-option value="casa">Casa con patio</ion-select-option>
             <ion-select-option value="apartamento">Apartamento</ion-select-option>
             <ion-select-option value="finca">Finca/Zona rural</ion-select-option>
@@ -84,7 +84,7 @@
         </ion-item>
         <ion-item lines="none">
           <ion-icon name="paw-outline" slot="start" color="medium"></ion-icon>
-          <ion-select label="¿Tienes otras mascotas?" labelPlacement="stacked" value="si_perro">
+          <ion-select label="¿Tienes otras mascotas?" labelPlacement="stacked" [(ngModel)]="profile.otherPets">
             <ion-select-option value="no">No, será la primera</ion-select-option>
             <ion-select-option value="si_perro">Sí, perros</ion-select-option>
             <ion-select-option value="si_gato">Sí, gatos</ion-select-option>
@@ -103,7 +103,7 @@
       <ion-card-content>
         <ion-item lines="full">
           <ion-icon name="heart-outline" slot="start" color="tertiary"></ion-icon>
-          <ion-select label="Especie de interés" labelPlacement="stacked" value="perro">
+          <ion-select label="Especie de interés" labelPlacement="stacked" [(ngModel)]="profile.speciesPref">
             <ion-select-option value="perro">Perro</ion-select-option>
             <ion-select-option value="gato">Gato</ion-select-option>
             <ion-select-option value="cualquiera">Me es indiferente</ion-select-option>
@@ -111,7 +111,7 @@
         </ion-item>
         <ion-item lines="none">
           <ion-icon name="resize-outline" slot="start" color="secondary"></ion-icon>
-          <ion-select label="Tamaño preferido" labelPlacement="stacked" value="mediano">
+          <ion-select label="Tamaño preferido" labelPlacement="stacked" [(ngModel)]="profile.sizePref">
             <ion-select-option value="pequeno">Pequeño</ion-select-option>
             <ion-select-option value="mediano">Mediano</ion-select-option>
             <ion-select-option value="grande">Grande</ion-select-option>
@@ -121,7 +121,7 @@
     </ion-card>
   </div>
   
-  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top action-btn">
+  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top action-btn" (click)="saveProfile()">
     Guardar Todos los Cambios
   </ion-button>
 </ion-content>

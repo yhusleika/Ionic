@@ -21,17 +21,35 @@
 
   <ion-card class="premium-card">
     <ion-card-content>
+      <!-- Nombre remitente -->
+      <ion-item lines="full">
+        <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+        <ion-input label="Nombre completo" labelPlacement="stacked" [(ngModel)]="senderName" placeholder="Tu nombre" [disabled]="isSending"></ion-input>
+      </ion-item>
+      
+      <!-- Correo electrónico remitente -->
+      <ion-item lines="full">
+        <ion-icon name="mail-outline" slot="start" color="medium"></ion-icon>
+        <ion-input label="Correo electrónico" labelPlacement="stacked" type="email" [(ngModel)]="senderEmail" placeholder="Tu correo electrónico" [disabled]="isSending"></ion-input>
+      </ion-item>
+
+      <!-- Asunto -->
       <ion-item lines="full">
         <ion-icon name="information-circle-outline" slot="start" color="medium"></ion-icon>
-        <ion-input label="Asunto" labelPlacement="stacked" placeholder="Motivo de tu mensaje"></ion-input>
+        <ion-input label="Asunto" labelPlacement="stacked" [(ngModel)]="subject" placeholder="Motivo de tu mensaje" [disabled]="isSending"></ion-input>
       </ion-item>
+
+      <!-- Mensaje -->
       <ion-item lines="none">
         <ion-icon name="document-text-outline" slot="start" color="medium"></ion-icon>
-        <ion-textarea label="Mensaje" labelPlacement="stacked" rows="4" placeholder="Escribe aquí tu mensaje..."></ion-textarea>
+        <ion-textarea label="Mensaje" labelPlacement="stacked" rows="4" [(ngModel)]="message" placeholder="Escribe aquí tu mensaje..." [disabled]="isSending"></ion-textarea>
       </ion-item>
-      <ion-button expand="block" shape="round" class="ion-margin-top action-btn">
-        <ion-icon slot="start" name="send-outline"></ion-icon>
-        Enviar Mensaje
+
+      <!-- Botón Enviar con Spinner -->
+      <ion-button expand="block" shape="round" class="ion-margin-top action-btn" (click)="sendMessage()" [disabled]="isSending">
+        <ion-spinner name="crescent" slot="start" *ngIf="isSending"></ion-spinner>
+        <ion-icon slot="start" name="send-outline" *ngIf="!isSending"></ion-icon>
+        {{ isSending ? 'Enviando Mensaje...' : 'Enviar Mensaje' }}
       </ion-button>
     </ion-card-content>
   </ion-card>
